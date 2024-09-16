@@ -19,14 +19,36 @@ const app = express();
 app.use(express.json());
 
 // ミドルウェア：ルートハンドラの前後に行われる処理
-app.use('/', function(req, res, next) {
+app.use('/', function (req, res, next) {
+  console.log('/ start1');
+  if (true) {
+    return next('error happened.');
+  }
+  console.log('/ start2');
+});
 
+app.use('/', function (req, res, next) {
+  console.log('/ middle');
+  next();
 });
 
 // ルートハンドラ：パスとメソッドに紐付くメインの処理
-app.get('/', function(req, res) {
-
+app.get('/*', function (req, res, next) {
+  console.log('/ get');
+  next();
 });
+app.get('/api', function (req, res, next) {
+  console.log('/ get2');
+});
+
+// エラーハンドラ：エラーが発生した場合の処理
+app.use((error, req, res, next) => {
+  if (res.headersSent) {
+    return next(error); // 既にレスポンスが送信されている場合は次のミドルウェアにエラーを渡す
+  }
+  res.json({ error: error });
+})
+
 app.listen(PORT, function () {
   console.log(`Server start: http://localhost:${PORT}`);
 });
