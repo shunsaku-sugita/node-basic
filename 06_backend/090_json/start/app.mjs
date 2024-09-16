@@ -4,10 +4,10 @@ import express from 'express';
 const PORT = 8080;
 const app = express();
 
-app.get('/', function(req, res) {
-    res.send('hello');
+app.get('/', function (req, res) {
+    res.send({ message: 'hello', number: 1, array: ['banana', 'apple', 'orange'] });
 })
 
-app.listen(PORT, function() {
+app.listen(PORT, function () {
     console.log(`Server start: http://localhost:${PORT}`)
 });
